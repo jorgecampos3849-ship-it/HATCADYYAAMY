@@ -25,7 +25,13 @@
 
     .container {
       text-align: center;
-      z-index: 2;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 40px;
+      border-radius: 30px;
+      backdrop-filter: blur(8px);
+      border: 2px solid white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
 
     .box {
@@ -38,7 +44,7 @@
       border-radius: 20px;
       user-select: none;
       box-shadow: 0 0 30px rgba(255,255,255,0.6);
-      animation: pulse 1.5s infinite, shake 6s infinite;
+      animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
@@ -47,29 +53,21 @@
       100% { transform: scale(1); }
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      95% { transform: translateX(-4px); }
-      96% { transform: translateX(4px); }
-      97% { transform: translateX(-4px); }
-      98% { transform: translateX(4px); }
-    }
-
     .secret, .final {
-      margin-top: 30px;
+      margin-top: 25px;
       font-size: 28px;
       font-weight: bold;
-      min-height: 40px;
       color: white;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.4);
     }
 
     .final {
-      margin-top: 15px;
-      font-size: 32px;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      font-size: 38px;
+      background: linear-gradient(90deg, #fff, #ffebee, #ffc107, #fff);
+      background-size: 200%;
       -webkit-background-clip: text;
       color: transparent;
-      animation: arcoiris 3s linear infinite;
+      animation: arcoiris 2s linear infinite;
     }
 
     @keyframes arcoiris {
@@ -77,59 +75,55 @@
       to { background-position: 200%; }
     }
 
-    .heart, .word {
+    .heart {
       position: absolute;
-      font-size: 20px;
-      animation: floatUp 3s linear forwards;
-      font-weight: bold;
+      color: #ff4ecd;
+      font-size: 25px;
+      z-index: 1;
+      animation: floatUp 4s linear forwards;
     }
-
-    .heart { color: pink; }
-    .word { color: #fff3; font-size: 22px; }
 
     @keyframes floatUp {
-      from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(-200px); opacity: 0; }
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
     }
 
-    /* IMÁGENES LATERALES */
-    .img-left, .img-right, .img-bottom {
+    /* ESTILO PARA LAS 5 FOTOS */
+    .img-decor {
       position: fixed;
-      z-index: 1;
-      max-height: 80%;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: -1;
+      max-height: 250px;
+      max-width: 200px;
+      border-radius: 15px;
+      border: 4px solid white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      object-fit: cover;
     }
 
-    .img-left {
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    /* Posiciones de las fotos */
+    .foto1 { left: 5%; top: 10%; transform: rotate(-10deg); }
+    .foto2 { left: 5%; bottom: 10%; transform: rotate(10deg); }
+    .foto3 { right: 5%; top: 10%; transform: rotate(10deg); }
+    .foto4 { right: 5%; bottom: 10%; transform: rotate(-10deg); }
+    .foto5 { bottom: 5%; left: 50%; transform: translateX(-50%); max-height: 180px; }
 
-    .img-right {
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .img-bottom {
-      right: 10px;
-      bottom: 10px;
-      max-width: 150px;
+    @media (max-width: 800px) {
+      .img-decor { max-height: 150px; max-width: 120px; }
     }
   </style>
 </head>
 <body>
-  <!-- IMÁGENES -->
-  <img src="6ae7aa8c-db52-4a44-97ee-f09569d78837.png" class="img-left" alt="Imagen izquierda">
-  <img src="dd2ff825-a945-4dce-a638-cce959aa15fb.png" class="img-right" alt="Imagen derecha">
-  <img src="12b3092a-05c4-43f0-a032-aea28db6a083.png" class="img-bottom" alt="Imagen decorativa">
+
+  <img src="https://i.postimg.cc/hhWJ44gs/b46d8a25-b4e4-4b6c-8e4d-6cf4a746fbfd.jpg" class="img-decor foto1">
+  <img src="https://i.postimg.cc/DykdwnCm/ca4415d8-1296-42e4-9065-1242010b7939.jpg" class="img-decor foto2">
+  <img src="https://i.postimg.cc/jSRHyvYr/2d6a40f7-1e27-4eae-a00e-9837bfaef16c.jpg" class="img-decor foto3">
+  <img src="https://i.postimg.cc/fLSmMrmR/471bd2f7-253f-4f0e-80c1-766fc0098775.jpg" class="img-decor foto4">
+  <img src="https://i.postimg.cc/x8KmzNsC/a326100f-2290-49b3-adc1-c5445eaa9e4e.jpg" class="img-decor foto5">
 
   <div class="container">
-    <div class="box" onclick="activarTroleo(event)">AQUÍ BOBA</div>
+    <div class="box" onclick="iniciarEfecto(event)">AQUÍ BOBA</div>
     <div class="secret" id="textoSecreto"></div>
-    <div class="final" id="mensajeFinal"></div>
+    <div id="mensajeFinal" class="final"></div>
   </div>
 
   <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
@@ -137,74 +131,54 @@
 
   <script>
     const textoCompleto = "LA CONTRASEÑA ES: PUCHIPUCHI";
-    const textoFinal = "YO TE AMO MAS";
-    const palabrasBonitas = ["preciosa","guapa","hermosa","bella","linda","cariño","mi vida","amor","tesoro"];
-    let escribiendo = false;
+    const textoFinal = "YO TE AMO MÁS ❤️";
+    let yaIniciado = false;
 
-    function activarTroleo(event) {
-      if (escribiendo) return;
+    function iniciarEfecto(event) {
+      if (yaIniciado) return;
+      yaIniciado = true;
+
       document.getElementById('clickSound').play();
-      lluviaCorazones();
-      lluviaPalabras();
+      
+      // Lluvia infinita de corazones y destellos
+      setInterval(crearCorazon, 150);
+
       escribirTexto();
     }
 
     function escribirTexto() {
       const cont = document.getElementById('textoSecreto');
-      const final = document.getElementById('mensajeFinal');
-      cont.textContent = "";
-      final.textContent = "";
       let i = 0;
-      escribiendo = true;
-
       const intervalo = setInterval(() => {
         cont.textContent += textoCompleto.charAt(i);
         i++;
         if (i >= textoCompleto.length) {
           clearInterval(intervalo);
-          setTimeout(escribirFinal, 600);
+          setTimeout(escribirFinal, 500);
         }
-      }, 80);
+      }, 70);
     }
 
     function escribirFinal() {
       const final = document.getElementById('mensajeFinal');
-      let i = 0;
       document.getElementById('loveSound').play();
-
-      const intervalo = setInterval(() => {
-        final.textContent += textoFinal.charAt(i);
-        i++;
-        if (i >= textoFinal.length) {
-          clearInterval(intervalo);
-          escribiendo = false;
-        }
-      }, 120);
+      final.textContent = textoFinal;
     }
 
-    function lluviaCorazones() {
-      for (let i = 0; i < 20; i++) {
-        const h = document.createElement('div');
-        h.className = 'heart';
-        h.textContent = '❤';
-        h.style.left = Math.random() * window.innerWidth + 'px';
-        h.style.top = window.innerHeight + 'px';
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3000);
-      }
-    }
-
-    function lluviaPalabras() {
-      for (let i = 0; i < 15; i++) {
-        const w = document.createElement('div');
-        w.className = 'word';
-        w.textContent = palabrasBonitas[Math.floor(Math.random() * palabrasBonitas.length)];
-        w.style.left = Math.random() * window.innerWidth + 'px';
-        w.style.top = window.innerHeight + 'px';
-        w.style.fontSize = 18 + Math.random()*12 + "px"; // tamaño aleatorio
-        document.body.appendChild(w);
-        setTimeout(() => w.remove(), 3000);
-      }
+    function crearCorazon() {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      const iconos = ['❤', '💖', '💕', '✨', '🌸', '🌹'];
+      h.textContent = iconos[Math.floor(Math.random() * iconos.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (Math.random() * 20 + 20) + 'px';
+      // Colores variados para los corazones
+      const colores = ['#ff4ecd', '#ff1744', '#f8bbd0', '#ffffff'];
+      h.style.color = colores[Math.floor(Math.random() * colores.length)];
+      
+      document.body.appendChild(h);
+      
+      setTimeout(() => h.remove(), 4000);
     }
   </script>
 </body>
