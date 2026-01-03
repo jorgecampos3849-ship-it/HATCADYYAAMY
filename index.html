@@ -32,7 +32,6 @@
       backdrop-filter: blur(10px);
       border: 2px solid white;
       box-shadow: 0 0 30px rgba(0,0,0,0.2);
-      position: relative;
     }
 
     .box {
@@ -46,6 +45,19 @@
       user-select: none;
       box-shadow: 0 0 30px rgba(255,255,255,0.6);
       animation: pulse 1.5s infinite;
+    }
+
+    .btn-no-tocar {
+      margin-top: 50px;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #ff4444;
+      font-size: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+      border: 1px solid #ff4444;
+      transition: 0.3s;
     }
 
     @keyframes pulse {
@@ -71,12 +83,25 @@
       animation: arcoiris 2s linear infinite;
     }
 
-    @keyframes arcoiris {
-      from { background-position: 0%; }
-      to { background-position: 200%; }
+    #jumpscare-container {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: black; z-index: 9999;
+      justify-content: center; align-items: center;
     }
 
-    /* ESTILO DE LA LLUVIA (CORAZONES Y PALABRAS) */
+    #foxy-img {
+      width: 100%; height: 100%; object-fit: contain;
+      animation: shake-jumpscare 0.1s infinite;
+    }
+
+    @keyframes shake-jumpscare {
+      0% { transform: translate(5px, 5px); }
+      50% { transform: translate(-5px, -5px); }
+      100% { transform: translate(5px, -5px); }
+    }
+
     .elemento-lluvia {
       position: absolute;
       z-index: 1;
@@ -89,11 +114,9 @@
     @keyframes floatUp {
       0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
       10% { opacity: 1; }
-      90% { opacity: 1; }
       100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
     }
 
-    /* FOTOS */
     .img-decor {
       position: fixed;
       z-index: 5;
@@ -104,20 +127,20 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       object-fit: cover;
     }
-
     .foto1 { left: 5%; top: 10%; transform: rotate(-8deg); }
     .foto2 { left: 5%; bottom: 10%; transform: rotate(8deg); }
     .foto3 { right: 5%; top: 10%; transform: rotate(8deg); }
     .foto4 { right: 5%; bottom: 10%; transform: rotate(-8deg); }
     .foto5 { bottom: 5%; left: 50%; transform: translateX(-50%); }
 
-    @media (max-width: 800px) {
-      .img-decor { max-height: 120px; max-width: 100px; }
-      .container { width: 80%; padding: 20px; }
-    }
+    @keyframes arcoiris { from { background-position: 0%; } to { background-position: 200%; } }
   </style>
 </head>
 <body>
+
+  <div id="jumpscare-container">
+    <img id="foxy-img" src="https://i.imgur.com/vHIn8m5.jpg" alt="FOXY">
+  </div>
 
   <img src="https://i.postimg.cc/hhWJ44gs/b46d8a25-b4e4-4b6c-8e4d-6cf4a746fbfd.jpg" class="img-decor foto1">
   <img src="https://i.postimg.cc/DykdwnCm/ca4415d8-1296-42e4-9065-1242010b7939.jpg" class="img-decor foto2">
@@ -129,26 +152,33 @@
     <div class="box" onclick="iniciarEfecto(event)">AQUÍ BOBA</div>
     <div class="secret" id="textoSecreto"></div>
     <div id="mensajeFinal" class="final"></div>
+    <div class="btn-no-tocar" onclick="jumpscare()">NO TOQUES AQUÍ</div>
   </div>
 
   <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-  <audio id="loveSound" src="https://www.soundjay.com/human/sounds/kiss-1.mp3"></audio>
+  <audio id="foxySound" src="https://www.myinstants.com/media/sounds/fnaf-1-jumpscare-sound.mp3"></audio>
+  
+  <audio id="cancionPrincipal" loop>
+    <source src="https://www.mboxdrive.com/Rita%20Pay%c3%a9s%20-%20Algo%20Contigo.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     const textoCompleto = "LA CONTRASEÑA ES: PUCHIPUCHI";
     const textoFinal = "YO TE AMO MÁS ❤️";
-    const halagos = ["GUAPA", "HERMOSA", "PRECIOSA", "MI NIÑA", "LA MEJOR PIANISTA 🎹", "FILÓSOFA 📚", "TE AMO", "ERES ÚNICA"];
+    const halagos = ["GUAPA", "HERMOSA", "PRECIOSA", "MI NIÑA", "LA MEJOR PIANISTA 🎹", "FILÓSOFA 📚", "MI VIDA", "TE ADORO"];
     let yaIniciado = false;
 
     function iniciarEfecto(event) {
       if (yaIniciado) return;
       yaIniciado = true;
 
+      // Reproducir sonido de click y la canción principal
       document.getElementById('clickSound').play();
+      const musica = document.getElementById('cancionPrincipal');
+      musica.volume = 0.6; // Volumen al 60% para que se oiga bien
+      musica.play();
       
-      // Lluvia infinita de corazones y palabras
       setInterval(crearElementoLluvia, 250);
-
       escribirTexto();
     }
 
@@ -167,15 +197,12 @@
 
     function escribirFinal() {
       const final = document.getElementById('mensajeFinal');
-      document.getElementById('loveSound').play();
       final.textContent = textoFinal;
     }
 
     function crearElementoLluvia() {
       const el = document.createElement('div');
       el.className = 'elemento-lluvia';
-      
-      // Alternar entre corazones y palabras
       if (Math.random() > 0.4) {
         el.textContent = halagos[Math.floor(Math.random() * halagos.length)];
         el.style.fontSize = (Math.random() * 15 + 18) + 'px';
@@ -184,14 +211,27 @@
         el.textContent = iconos[Math.floor(Math.random() * iconos.length)];
         el.style.fontSize = (Math.random() * 20 + 25) + 'px';
       }
-
       el.style.left = Math.random() * 90 + 'vw';
-      const colores = ['#ffffff', '#ffeb3b', '#f8bbd0', '#ff4ecd', '#80deea'];
+      const colores = ['#ffffff', '#ffeb3b', '#f8bbd0', '#ff4ecd'];
       el.style.color = colores[Math.floor(Math.random() * colores.length)];
-      el.style.animationDuration = (Math.random() * 2 + 3) + 's';
-      
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 5000);
+    }
+
+    function jumpscare() {
+      const container = document.getElementById('jumpscare-container');
+      const sound = document.getElementById('foxySound');
+      // Pausar música romántica un momento para el susto
+      const musica = document.getElementById('cancionPrincipal');
+      musica.pause();
+
+      container.style.display = 'flex';
+      sound.play();
+      
+      setTimeout(() => {
+        container.style.display = 'none';
+        musica.play(); // Reanudar la música después del susto
+      }, 2000);
     }
   </script>
 </body>
