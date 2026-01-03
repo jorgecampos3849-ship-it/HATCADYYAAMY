@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>HATCADYYAAMY</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(270deg, #ff0080, #7928ca, #2afadf);
+      background-size: 600% 600%;
+      animation: fondo 10s ease infinite;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    @keyframes fondo {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      text-align: center;
+      z-index: 2;
+    }
+
+    .box {
+      padding: 30px 60px;
+      background: linear-gradient(135deg, #ff4ecd, #ff9de2);
+      color: white;
+      font-size: 26px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 20px;
+      user-select: none;
+      box-shadow: 0 0 30px rgba(255,255,255,0.6);
+      animation: pulse 1.5s infinite, shake 6s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      95% { transform: translateX(-4px); }
+      96% { transform: translateX(4px); }
+      97% { transform: translateX(-4px); }
+      98% { transform: translateX(4px); }
+    }
+
+    .secret, .final {
+      margin-top: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      min-height: 40px;
+      color: white;
+    }
+
+    .final {
+      margin-top: 15px;
+      font-size: 32px;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: arcoiris 3s linear infinite;
+    }
+
+    @keyframes arcoiris {
+      from { background-position: 0%; }
+      to { background-position: 200%; }
+    }
+
+    .heart {
+      position: absolute;
+      color: pink;
+      font-size: 20px;
+      animation: floatUp 3s linear forwards;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-150px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box" onclick="activarTroleo(event)">AQUÍ BOBA</div>
+    <div class="secret" id="textoSecreto"></div>
+    <div class="final" id="mensajeFinal"></div>
+  </div>
+
+  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+  <audio id="loveSound" src="https://www.soundjay.com/human/sounds/kiss-1.mp3"></audio>
+
+  <script>
+    const textoCompleto = "LA CONTRASEÑA ES: PUCHIPUCHI";
+    const textoFinal = "YO TE AMO MAS";
+    let escribiendo = false;
+
+    function activarTroleo(event) {
+      if (escribiendo) return;
+
+      document.getElementById('clickSound').play();
+      lluviaCorazones();
+      escribirTexto();
+    }
+
+    function escribirTexto() {
+      const cont = document.getElementById('textoSecreto');
+      const final = document.getElementById('mensajeFinal');
+      cont.textContent = "";
+      final.textContent = "";
+      let i = 0;
+      escribiendo = true;
+
+      const intervalo = setInterval(() => {
+        cont.textContent += textoCompleto.charAt(i);
+        i++;
+        if (i >= textoCompleto.length) {
+          clearInterval(intervalo);
+          setTimeout(escribirFinal, 600);
+        }
+      }, 80);
+    }
+
+    function escribirFinal() {
+      const final = document.getElementById('mensajeFinal');
+      let i = 0;
+      document.getElementById('loveSound').play();
+
+      const intervalo = setInterval(() => {
+        final.textContent += textoFinal.charAt(i);
+        i++;
+        if (i >= textoFinal.length) {
+          clearInterval(intervalo);
+          escribiendo = false;
+        }
+      }, 120);
+    }
+
+    function lluviaCorazones() {
+      for (let i = 0; i < 20; i++) {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = '❤';
+        h.style.left = Math.random() * window.innerWidth + 'px';
+        h.style.top = window.innerHeight + 'px';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 3000);
+      }
+    }
+  </script>
+</body>
+</html>
