@@ -25,13 +25,14 @@
 
     .container {
       text-align: center;
-      z-index: 10;
-      background: rgba(255, 255, 255, 0.15);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.2);
       padding: 40px;
       border-radius: 30px;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       border: 2px solid white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0 30px rgba(0,0,0,0.2);
+      position: relative;
     }
 
     .box {
@@ -75,40 +76,44 @@
       to { background-position: 200%; }
     }
 
-    .heart {
+    /* ESTILO DE LA LLUVIA (CORAZONES Y PALABRAS) */
+    .elemento-lluvia {
       position: absolute;
-      color: #ff4ecd;
-      font-size: 25px;
       z-index: 1;
-      animation: floatUp 4s linear forwards;
+      white-space: nowrap;
+      pointer-events: none;
+      animation: floatUp 5s linear forwards;
+      font-weight: bold;
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
     }
 
-    /* ESTILO PARA LAS 5 FOTOS */
+    /* FOTOS */
     .img-decor {
       position: fixed;
-      z-index: -1;
-      max-height: 250px;
-      max-width: 200px;
+      z-index: 5;
+      max-height: 220px;
+      max-width: 180px;
       border-radius: 15px;
       border: 4px solid white;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       object-fit: cover;
     }
 
-    /* Posiciones de las fotos */
-    .foto1 { left: 5%; top: 10%; transform: rotate(-10deg); }
-    .foto2 { left: 5%; bottom: 10%; transform: rotate(10deg); }
-    .foto3 { right: 5%; top: 10%; transform: rotate(10deg); }
-    .foto4 { right: 5%; bottom: 10%; transform: rotate(-10deg); }
-    .foto5 { bottom: 5%; left: 50%; transform: translateX(-50%); max-height: 180px; }
+    .foto1 { left: 5%; top: 10%; transform: rotate(-8deg); }
+    .foto2 { left: 5%; bottom: 10%; transform: rotate(8deg); }
+    .foto3 { right: 5%; top: 10%; transform: rotate(8deg); }
+    .foto4 { right: 5%; bottom: 10%; transform: rotate(-8deg); }
+    .foto5 { bottom: 5%; left: 50%; transform: translateX(-50%); }
 
     @media (max-width: 800px) {
-      .img-decor { max-height: 150px; max-width: 120px; }
+      .img-decor { max-height: 120px; max-width: 100px; }
+      .container { width: 80%; padding: 20px; }
     }
   </style>
 </head>
@@ -132,6 +137,7 @@
   <script>
     const textoCompleto = "LA CONTRASEÑA ES: PUCHIPUCHI";
     const textoFinal = "YO TE AMO MÁS ❤️";
+    const halagos = ["GUAPA", "HERMOSA", "PRECIOSA", "MI NIÑA", "LA MEJOR PIANISTA 🎹", "FILÓSOFA 📚", "TE AMO", "ERES ÚNICA"];
     let yaIniciado = false;
 
     function iniciarEfecto(event) {
@@ -140,8 +146,8 @@
 
       document.getElementById('clickSound').play();
       
-      // Lluvia infinita de corazones y destellos
-      setInterval(crearCorazon, 150);
+      // Lluvia infinita de corazones y palabras
+      setInterval(crearElementoLluvia, 250);
 
       escribirTexto();
     }
@@ -165,20 +171,27 @@
       final.textContent = textoFinal;
     }
 
-    function crearCorazon() {
-      const h = document.createElement('div');
-      h.className = 'heart';
-      const iconos = ['❤', '💖', '💕', '✨', '🌸', '🌹'];
-      h.textContent = iconos[Math.floor(Math.random() * iconos.length)];
-      h.style.left = Math.random() * 100 + 'vw';
-      h.style.fontSize = (Math.random() * 20 + 20) + 'px';
-      // Colores variados para los corazones
-      const colores = ['#ff4ecd', '#ff1744', '#f8bbd0', '#ffffff'];
-      h.style.color = colores[Math.floor(Math.random() * colores.length)];
+    function crearElementoLluvia() {
+      const el = document.createElement('div');
+      el.className = 'elemento-lluvia';
       
-      document.body.appendChild(h);
+      // Alternar entre corazones y palabras
+      if (Math.random() > 0.4) {
+        el.textContent = halagos[Math.floor(Math.random() * halagos.length)];
+        el.style.fontSize = (Math.random() * 15 + 18) + 'px';
+      } else {
+        const iconos = ['❤', '💖', '💕', '✨', '🌸'];
+        el.textContent = iconos[Math.floor(Math.random() * iconos.length)];
+        el.style.fontSize = (Math.random() * 20 + 25) + 'px';
+      }
+
+      el.style.left = Math.random() * 90 + 'vw';
+      const colores = ['#ffffff', '#ffeb3b', '#f8bbd0', '#ff4ecd', '#80deea'];
+      el.style.color = colores[Math.floor(Math.random() * colores.length)];
+      el.style.animationDuration = (Math.random() * 2 + 3) + 's';
       
-      setTimeout(() => h.remove(), 4000);
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
     }
   </script>
 </body>
