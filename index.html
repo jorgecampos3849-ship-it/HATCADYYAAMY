@@ -77,20 +77,55 @@
       to { background-position: 200%; }
     }
 
-    .heart {
+    .heart, .word {
       position: absolute;
-      color: pink;
       font-size: 20px;
       animation: floatUp 3s linear forwards;
+      font-weight: bold;
     }
+
+    .heart { color: pink; }
+    .word { color: #fff3; font-size: 22px; }
 
     @keyframes floatUp {
       from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(-150px); opacity: 0; }
+      to { transform: translateY(-200px); opacity: 0; }
+    }
+
+    /* IMÁGENES LATERALES */
+    .img-left, .img-right, .img-bottom {
+      position: fixed;
+      z-index: 1;
+      max-height: 80%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .img-left {
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .img-right {
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .img-bottom {
+      right: 10px;
+      bottom: 10px;
+      max-width: 150px;
     }
   </style>
 </head>
 <body>
+  <!-- IMÁGENES -->
+  <img src="6ae7aa8c-db52-4a44-97ee-f09569d78837.png" class="img-left" alt="Imagen izquierda">
+  <img src="dd2ff825-a945-4dce-a638-cce959aa15fb.png" class="img-right" alt="Imagen derecha">
+  <img src="12b3092a-05c4-43f0-a032-aea28db6a083.png" class="img-bottom" alt="Imagen decorativa">
+
   <div class="container">
     <div class="box" onclick="activarTroleo(event)">AQUÍ BOBA</div>
     <div class="secret" id="textoSecreto"></div>
@@ -103,13 +138,14 @@
   <script>
     const textoCompleto = "LA CONTRASEÑA ES: PUCHIPUCHI";
     const textoFinal = "YO TE AMO MAS";
+    const palabrasBonitas = ["preciosa","guapa","hermosa","bella","linda","cariño","mi vida","amor","tesoro"];
     let escribiendo = false;
 
     function activarTroleo(event) {
       if (escribiendo) return;
-
       document.getElementById('clickSound').play();
       lluviaCorazones();
+      lluviaPalabras();
       escribirTexto();
     }
 
@@ -155,6 +191,19 @@
         h.style.top = window.innerHeight + 'px';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 3000);
+      }
+    }
+
+    function lluviaPalabras() {
+      for (let i = 0; i < 15; i++) {
+        const w = document.createElement('div');
+        w.className = 'word';
+        w.textContent = palabrasBonitas[Math.floor(Math.random() * palabrasBonitas.length)];
+        w.style.left = Math.random() * window.innerWidth + 'px';
+        w.style.top = window.innerHeight + 'px';
+        w.style.fontSize = 18 + Math.random()*12 + "px"; // tamaño aleatorio
+        document.body.appendChild(w);
+        setTimeout(() => w.remove(), 3000);
       }
     }
   </script>
